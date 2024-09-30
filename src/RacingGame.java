@@ -1,10 +1,10 @@
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import javax.swing.*;
 /*
  * This is a 2d traffic racer game designed using java swing
  * @author Omkar Mhamal
@@ -18,6 +18,7 @@ public class RacingGame extends JPanel implements ActionListener {
     private ArrayList<Car> enemyCars;
     private int score;
     private int speed;  // Speed of enemy cars
+    private int lineMove;
     private int[] lanes = {100, 200};
     private Image playerCarImage;
     private Image enemyCarImage;
@@ -61,6 +62,7 @@ public class RacingGame extends JPanel implements ActionListener {
         addEnemyCar();
         score = 0;
         speed = 5;  // Initial speed of enemy cars
+        lineMove = 5;
     }
 
     // Adding a single enemy car
@@ -71,11 +73,23 @@ public class RacingGame extends JPanel implements ActionListener {
 
     // Move enemy cars and check for collisions
     public void actionPerformed(ActionEvent e) {
+        int k=2;
+        if(score>=20){
+            k=3;
+        }
+        if(score>=30){
+            k=5;
+        }
+        lineMove=lineMove+k;
+        if(lineMove>=40){
+            lineMove=0;
+        }
         for (int i = 0; i < enemyCars.size(); i++) {
             Car enemyCar = enemyCars.get(i);
             
             // Move down based on current speed
             enemyCar.moveDown(speed);
+           
 
             // Check if the enemy car has reached y = 400, add a new enemy car
             if (enemyCar.y == 400 && enemyCars.size() == 1) {
@@ -114,10 +128,14 @@ public class RacingGame extends JPanel implements ActionListener {
 
         // Draw road lines
         g.setColor(Color.WHITE);
+        
+    
         for (int i = 0; i < 15; i++) {
-            g.fillRect((boardWidth/2)-15, i * 40, 10, 20);
+      
+            g.fillRect((boardWidth/2)-15,i*40+lineMove , 10, 20);
+        
         }
-
+        
         // Draw player car
         playerCar.draw(g);
 
@@ -130,6 +148,12 @@ public class RacingGame extends JPanel implements ActionListener {
         g.setColor(Color.BLACK);
         g.setFont(new Font("Arial", Font.BOLD, 20));
         g.drawString("Score: " + score, 10, 30);
+
+        // keys help 
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("Arial", Font.BOLD, 15  ));
+        g.drawString("use < > keys", 10, 550);
+
     }
 
     public static void main(String[] args) {
